@@ -13,6 +13,7 @@ import co.com.sofka.domain.game.values.Money;
 import co.com.sofka.domain.game.values.Name;
 import co.com.sofka.domain.game.values.PlayerId;
 import co.com.sofka.domain.generic.DomainEvent;
+import co.com.sofka.usecases.game.StartGameUseCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
