@@ -1,6 +1,7 @@
 package co.com.sofka.domain.game;
 
 import co.com.sofka.domain.game.events.GameCreated;
+import co.com.sofka.domain.game.events.GameStarted;
 import co.com.sofka.domain.game.values.GameId;
 import co.com.sofka.domain.game.values.PlayerId;
 import co.com.sofka.domain.generic.AggregateEvent;
@@ -31,7 +32,11 @@ public class Game extends AggregateEvent<GameId> {
         return game;
     }
 
-   // public void startGame()
+    public void startGame() {
+        appendChange(new GameStarted()).apply();
+    }
+
+    // public void startGame()
     //{appendChange(new GameStarted()).apply();}
 
 }
