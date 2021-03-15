@@ -53,22 +53,23 @@ class StartGameUseCaseTest {
     }
 
     @Test
-    void gamestarted(){
-        var gameId = GameId.of("ffff");
-        var command = new StartGame(gameId);
-        var events = new ArrayList<>(eventStored());
-        events.add(new GameStarted());
-        when(repository.getEventsBy(gameId.value())).thenReturn(events);
+    void inicializarJuego(){
+        var id = GameId.of("xxxx");
+        var command = new StartGame(id);
+        var useCase = new StartGameUseCase();
 
-        var startGameUseCase = new StartGameUseCase();
-        startGameUseCase.addRepository(repository);
+        when(repository.getEventsBy(id.value())).thenReturn(eventStored());
+        useCase.addRepository(repository);
 
-        Assertions.assertThrows(BusinessException.class,() ->
-                UseCaseHandler.getInstance()
-                        .setIdentifyExecutor(gameId.value())
-                        .syncExecutor(startGameUseCase, new RequestCommand<>(command))
-                        .orElseThrow(), "El juego ya ha iniciado"
-        );
+        var events = UseCaseHandler.getInstance()
+                .setIdentifyExecutor(id.value())
+                .syncExecutor(useCase, new RequestCommand<>(command))
+                .orElseThrow()
+                .getDomainEvents();
+
+        var gameStarted = (GameStarted)events.get(0);
+        Assertions.assertEquals(3, gameStarted.getJugadoresIds().size());
+
     }
 
     private List<DomainEvent> eventStored() {

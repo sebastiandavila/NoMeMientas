@@ -8,34 +8,58 @@ import co.com.sofka.domain.game.values.GameId;
 import co.com.sofka.domain.game.values.PlayerId;
 import co.com.sofka.domain.generic.AggregateEvent;
 import co.com.sofka.domain.generic.DomainEvent;
+import co.com.sofka.domain.round.events.RoundCreated;
+import co.com.sofka.domain.round.values.DiceId;
+import co.com.sofka.domain.round.values.PhaseId;
 import co.com.sofka.domain.round.values.RoundId;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public class Round extends AggregateEvent<RoundId> {
 
-    protected List<Phase> phases;
-    protected List<Dice> dices;
     protected GameId gameId;
+    protected Map<DiceId, Dice> dices;
+    protected Map<PhaseId, Phase> phases;
+    //protected Map<GameId, Punto> puntaje;
+    protected Set<PlayerId> playersId;
 
-    public Round(RoundId entityId, List<Player> players) {
+    public Round(RoundId entityId, GameId gameId, Set<PlayerId> jugadorIds) {
         super(entityId);
-        Map<PlayerId, Player> newPlayers = new HashMap<>();
-        players.forEach(player -> newPlayers.put(player.identity(), player));
-        appendChange(new GameCreated(newPlayers)).apply();
+        appendChange(new RoundCreated(jugadorIds, gameId)).apply();
     }
 
-    private Round(RoundId entityId){
+    private Round(RoundId entityId) {
         super(entityId);
-        subscribe(new ChangeRound(this));
-    }
-    public static Round from(RoundId entityId, List<DomainEvent> events){
-        var round = new Round(entityId);
-        events.forEach(round::applyEvent);
-        return round;
+        subscribe(new RondaChange(this));
     }
 
+    public static Round from(RoundId entityId, List<DomainEvent> events) {
+        var ronda = new Round(entityId);
+        events.forEach(ronda::applyEvent);
+        return ronda;
+    }
+/*
+    public void inicializarRonda() {
+        appendChange(new RondaInicializada(juegoId, jugadorIds)).apply();
+    }
+
+
+    public void tirarDados() {
+        var carasList = this.dados
+                .values()
+                .stream()
+                .map(dado -> Map.of(dado.identity(), dado.caras()))
+                .collect(Collectors.toList());
+        appendChange(new DadosLanzados(juegoId, carasList)).apply();
+    }
+
+    public void crearEtapaInicial() {
+        List<Cara> carasVisibles = new ArrayList<>();
+        appendChange(new EtapaCreada(juegoId, EtapaId.of(1), carasVisibles)).apply();
+    }
+*/
 }

@@ -1,12 +1,20 @@
 package co.com.sofka.domain.game.events;
 
-import co.com.sofka.domain.game.values.GameId;
 import co.com.sofka.domain.game.values.PlayerId;
 import co.com.sofka.domain.generic.DomainEvent;
 
-public class GameStarted extends DomainEvent {
+import java.util.Collection;
+import java.util.Set;
 
-    public GameStarted() {
+public class GameStarted extends DomainEvent {
+    private final Set<PlayerId> playerIds;
+
+    public GameStarted(Set<PlayerId> playerIds) {
         super("nomemientas.game.started");
+        this.playerIds = playerIds;
+    }
+
+    public Set<PlayerId> getJugadoresIds() {
+        return playerIds;
     }
 }

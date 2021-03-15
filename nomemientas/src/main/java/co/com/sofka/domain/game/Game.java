@@ -6,6 +6,8 @@ import co.com.sofka.domain.game.values.GameId;
 import co.com.sofka.domain.game.values.PlayerId;
 import co.com.sofka.domain.generic.AggregateEvent;
 import co.com.sofka.domain.generic.DomainEvent;
+import co.com.sofka.domain.round.events.RoundCreated;
+import co.com.sofka.domain.round.values.RoundId;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.Map;
 public class Game extends AggregateEvent<GameId> {
     protected Map<PlayerId, Player> players;
     protected Boolean started;
+    protected Boolean winner;
 
     public Game(GameId entityId, List<Player> players) {
         super(entityId);
@@ -33,10 +36,15 @@ public class Game extends AggregateEvent<GameId> {
     }
 
     public void startGame() {
-        appendChange(new GameStarted()).apply();
+        var jugadoresIds = players.keySet();
+        appendChange(new GameStarted(jugadoresIds)).apply();
     }
 
     // public void startGame()
     //{appendChange(new GameStarted()).apply();}
+
+    public Boolean Winner() {
+        return winner;
+    }
 
 }
