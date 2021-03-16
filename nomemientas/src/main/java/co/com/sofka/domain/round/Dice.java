@@ -7,7 +7,20 @@ import co.com.sofka.domain.round.values.Face;
 
 public class Dice extends Entity<DiceId> {
     private Face face;
+
     public Dice(DiceId entityId) {
         super(entityId);
+    }
+
+    public void setFace(Face face){
+        this.face = face;
+    }
+
+    public void throwDice(){
+        this.face = new Face((int) Math.random()*(6 - 1) + 1);
+    }
+
+    public Face face(){
+        return face;
     }
 }
