@@ -9,7 +9,9 @@ import co.com.sofka.domain.game.values.PlayerId;
 import co.com.sofka.domain.generic.AggregateEvent;
 import co.com.sofka.domain.generic.DomainEvent;
 import co.com.sofka.domain.round.events.RoundCreated;
+import co.com.sofka.domain.round.events.ThrewDice;
 import co.com.sofka.domain.round.values.DiceId;
+import co.com.sofka.domain.round.values.Face;
 import co.com.sofka.domain.round.values.PhaseId;
 import co.com.sofka.domain.round.values.RoundId;
 
@@ -17,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class Round extends AggregateEvent<RoundId> {
@@ -47,16 +50,25 @@ public class Round extends AggregateEvent<RoundId> {
         appendChange(new RondaInicializada(juegoId, jugadorIds)).apply();
     }
 
-
+*/
     public void tirarDados() {
-        var carasList = this.dados
-                .values()
-                .stream()
-                .map(dado -> Map.of(dado.identity(), dado.caras()))
-                .collect(Collectors.toList());
-        appendChange(new DadosLanzados(juegoId, carasList)).apply();
-    }
 
+        var dices = Map.of(DiceId.of(1), new Dice(DiceId.of(1)),
+                DiceId.of(2), new Dice(DiceId.of(2)),
+                DiceId.of(3), new Dice(DiceId.of(3)),
+                DiceId.of(4), new Dice(DiceId.of(4)),
+                DiceId.of(5), new Dice(DiceId.of(5)),
+                DiceId.of(6), new Dice(DiceId.of(6)));
+
+
+        dices.forEach((diceId, dice) -> dice.throwDice());
+
+        var faces = new HashMap<DiceId, Face>();
+
+        dices.forEach((diceId, dice)->faces.put(diceId,dice.face()));
+        appendChange(new ThrewDice( entityId, faces )).apply();
+    }
+/*
     public void crearEtapaInicial() {
         List<Cara> carasVisibles = new ArrayList<>();
         appendChange(new EtapaCreada(juegoId, EtapaId.of(1), carasVisibles)).apply();

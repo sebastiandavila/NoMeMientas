@@ -18,14 +18,8 @@ public class RondaChange extends EventChange {
         });
 
         apply((ThrewDice event) -> {
-
-            for (var i = 1; i <= 6; i++) {//inicializar dados
-                round.dices.put(DiceId.of(i), new Dice(DiceId.of(i)));
-                round.dices.get(i).setFace(event.faces().get(i));
-            }
-
-
-
+            event.faces().forEach((diceId, face) -> round.dices.put(diceId, new Dice(diceId)));
+            event.faces().forEach((diceId, face) -> round.dices.get(diceId).setFace(face));
         });
 
     }

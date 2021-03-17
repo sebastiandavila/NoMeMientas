@@ -12,6 +12,7 @@ public class StartGameUseCase extends UseCase<RequestCommand<StartGame>, Respons
     public void executeUseCase(RequestCommand<StartGame> startGameRequestCommand) {
         var command = startGameRequestCommand.getCommand();
         var game = Game.from(command.gameId(), retrieveEvents());
+
         try {
         game.startGame();
         emit().onResponse(new ResponseEvents(game.getUncommittedChanges()));
